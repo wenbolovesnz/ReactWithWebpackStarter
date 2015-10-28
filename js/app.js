@@ -6,17 +6,37 @@ let injectTapEventPlugin = require("react-tap-event-plugin");
 //https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
 
-import {login} from "./login";
 const React = require('react');
 const ReactDOM = require('react-dom');
 const Mui = require('material-ui');
+const Firebase = require('firebase');
 const RaisedButton = Mui.RaisedButton;
-const AppBar = Mui.AppBar;
+const CircularProgress = Mui.CircularProgress;
+const Actions = require('./actions');
+const Store = require('./store');
+
 
 const App = React.createClass({
+	getInitialState(){
+		return Store.getInitData();
+	},
+
+	componentDidMount() {
+		Store.addChangeListener(this._onChange);
+	},
+
+	componentWillUnmount() {
+		Store.removeChangeListener(this._onChange);
+	},
+
+	_onChange() {
+		this.setState(Store.getInitData());
+	},
+
 	render(){
 		return <div>
-			<ItemList items = {[{text:'1', key: '1'}, {text:'2', key:'2'}]}/>
+			<div>{this.state.quantity}</div>
+			<ItemList items = { this.state.items }/>
 		</div>
 	}
 });
@@ -36,15 +56,31 @@ const ItemList = React.createClass({
 });
 
 const Item = React.createClass({
+	handleClick(){
+		Actions.addBeef({});
+	},
 	render(){
 		return(
 			<div>
-				<RaisedButton label={this.props.text} primary={true} />
+				<RaisedButton label={this.props.text} primary={true} onClick={this.handleClick}/>
 			</div>
 		)
 	}
 });
 
-ReactDOM.render( <App/>, window.document.getElementById('target'));
+ReactDOM.render(<CircularProgress mode="indeterminate" size={2} />, window.document.getElementById('target'));
 
-console.log('React App Started.');
+
+let firebase  = new Firebase("https://food-ordering.firebaseio.com/");
+
+firebase.child('orders').limitToLast(1).on('child_added', (snapShot) => {
+	console.log(snapShot.val());
+	Actions.appInit(() => {
+		ReactDOM.render( <App/>, window.document.getElementById('target'));
+		console.log('React App Started.');
+	});
+});
+
+
+
+
