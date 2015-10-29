@@ -6,17 +6,52 @@ let injectTapEventPlugin = require("react-tap-event-plugin");
 //https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
 
+require('../css/bootstrap.css');
+require('../css/app.less');
+
 const React = require('react');
 const ReactDOM = require('react-dom');
 const Mui = require('material-ui');
+
+const MyRawTheme = require('./myTheme');
+const ThemeManager = require('material-ui/lib/styles/theme-manager');
+const ThemeDecorator = require('material-ui/lib/styles/theme-decorator');
+
+
 const Firebase = require('firebase');
 const RaisedButton = Mui.RaisedButton;
-const CircularProgress = Mui.CircularProgress;
+const Paper = Mui.Paper;
+const AppLoadingBar = require('./appLoadingBar');;
+
 const Actions = require('./actions');
 const Store = require('./store');
 
 
+const AppHeader = React.createClass({
+	render(){
+		return (
+			<div id='appHeader'>
+				<Paper zDepth={1}>
+					<h2>Maria Mulata</h2>
+				</Paper>
+			</div>
+		);
+	}
+});
+
+
 const App = React.createClass({
+
+	childContextTypes : {
+		muiTheme: React.PropTypes.object
+	},
+
+	getChildContext() {
+		return {
+			muiTheme: ThemeManager.getMuiTheme(MyRawTheme)
+		};
+	},
+
 	getInitialState(){
 		return Store.getInitData();
 	},
@@ -35,6 +70,8 @@ const App = React.createClass({
 
 	render(){
 		return <div>
+
+			<AppHeader />
 			<div>{this.state.quantity}</div>
 			<ItemList items = { this.state.items }/>
 		</div>
@@ -68,7 +105,9 @@ const Item = React.createClass({
 	}
 });
 
-ReactDOM.render(<CircularProgress mode="indeterminate" size={2} />, window.document.getElementById('target'));
+
+
+ReactDOM.render(<AppLoadingBar />, window.document.getElementById('target'));
 
 
 let firebase  = new Firebase("https://food-ordering.firebaseio.com/");

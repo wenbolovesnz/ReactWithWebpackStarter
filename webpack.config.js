@@ -28,8 +28,13 @@ module.exports = {
             {
                 test: /\.css$/,
                 exclude: /node_modules/,
-                loader: "style-loader!css-loader"
-            }
+                loader: "style-loader!css-loader!autoprefixer-loader"
+            },
+		        {
+			        test: /\.less$/,
+			        exclude: /node_modules/,
+			        loader: "style-loader!css-loader!autoprefixer-loader!less-loader"
+		        }
         ]
     }
 }
