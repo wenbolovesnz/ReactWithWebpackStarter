@@ -13,6 +13,10 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 		return _data;
 	},
 
+	setInitData: function(data){
+		_data = data;
+	},
+
 	emitChange: function() {
 		this.emit(CHANGE_EVENT);
 	},
@@ -36,7 +40,7 @@ AppDispatcher.register(function(action) {
 				Store.emitChange();
 			break;
 		case Constants.ADD_BEEF:
-			_data.quantity++;
+			_data.total++;
 			Store.emitChange();
 			break;
 		default:

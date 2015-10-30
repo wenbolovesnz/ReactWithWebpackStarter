@@ -4,9 +4,9 @@ module.exports = {
     context: path.resolve('js'),
     entry: ["./utils", "./app"],
     output: {        
-        path: path.resolve('build/js/'),
+        path: path.resolve('build/'),
         filename: "bundle.js",
-        publicPath: '/public/assets/js/'
+        publicPath: '/public/assets/'
     },
     devServer:{
         contentBase: 'public'
@@ -34,6 +34,11 @@ module.exports = {
 			        test: /\.less$/,
 			        exclude: /node_modules/,
 			        loader: "style-loader!css-loader!autoprefixer-loader!less-loader"
+		        },
+		        {
+			        test: /\.(png|jpg)/,
+			        exclude: /node_modules/,
+			        loader:"url-loader?limit=1000000"
 		        }
         ]
     }

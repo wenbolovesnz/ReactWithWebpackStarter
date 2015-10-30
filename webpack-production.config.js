@@ -1,17 +1,47 @@
 var WebpackStrip = require('strip-loader');
-var devConfig = require('./webpack.config.js');
+var path = require('path');
 
-var stripLoader = {
-	test:/\.js$/,
-	exclude: /node_modules/,	
-	loader: WebpackStrip.loader('console.log', 'debug')
+module.exports = {
+	context: path.resolve('js'),
+	entry: ["./utils", "./app"],
+	output: {
+		path: path.resolve('public/assets'),
+		filename: "bundle.js"
+	},
+	module:{
+		preLoaders:[
+			{
+				test:/\.js$/,
+				exclude: /node_modules/,
+				loader: 'jshint-loader'
+			}
+		],
+		loaders:[
+			{
+				test: /\.js$/,
+				exclude: /node_modules/,
+				loader: "babel-loader"
+			},
+			{
+				test: /\.css$/,
+				exclude: /node_modules/,
+				loader: "style-loader!css-loader!autoprefixer-loader"
+			},
+			{
+				test: /\.less$/,
+				exclude: /node_modules/,
+				loader: "style-loader!css-loader!autoprefixer-loader!less-loader"
+			},
+			{
+				test: /\.(png|jpg)/,
+				exclude: /node_modules/,
+				loader:"url-loader?limit=1000000"
+			},
+			{
+				test:/\.js$/,
+				exclude: /node_modules/,
+				loader: WebpackStrip.loader('console.log', 'debug')
+			}
+		]
+	}
 };
-console.log(devConfig.module.loaders);
-
-devConfig.module.loaders.push(stripLoader);
-
-console.log(devConfig.module.loaders);
-
-module.exports = devConfig;
-
-

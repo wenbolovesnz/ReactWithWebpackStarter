@@ -1,14 +1,12 @@
 let AppDispatcher = require('./appDispatcher');
 let Constants = require('./constants');
+let Store = require('./store');
 
 const Actions = {
 	appInit: function(callback) {
 		AppDispatcher.dispatch({
 			actionType: Constants.APP_INIT,
-			appInitData: {
-				items: [{text:'1', key: '1'}, {text:'2', key:'2'}],
-				quantity: 0
-			}
+			appInitData: Store.getInitData()
 		});
 		callback()
 	},

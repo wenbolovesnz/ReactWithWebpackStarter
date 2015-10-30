@@ -22,9 +22,13 @@ const Firebase = require('firebase');
 const RaisedButton = Mui.RaisedButton;
 const Paper = Mui.Paper;
 const AppLoadingBar = require('./appLoadingBar');;
+const Summary = require('./summary');;
+const Notification = require('./notification');;
 
 const Actions = require('./actions');
 const Store = require('./store');
+
+
 
 
 const AppHeader = React.createClass({
@@ -70,10 +74,17 @@ const App = React.createClass({
 
 	render(){
 		return <div>
-
 			<AppHeader />
-			<div>{this.state.quantity}</div>
-			<ItemList items = { this.state.items }/>
+			<img src={this.state.image}/>
+			<Notification  date={this.state.date}/>
+			<div className="container">
+				<div className="row">
+					<Summary total={this.state.total} beef={this.state.beef} chicken={this.state.chicken} veg={this.state.veg} />
+					<div id='products' className="col-lg-8 col-md-8 col-sm-12">
+						<ItemList items = { this.state.items }/>
+					</div>
+				</div>
+			</div>
 		</div>
 	}
 });
@@ -114,6 +125,19 @@ let firebase  = new Firebase("https://food-ordering.firebaseio.com/");
 
 firebase.child('orders').limitToLast(1).on('child_added', (snapShot) => {
 	console.log(snapShot.val());
+
+	let initData = {
+		items: [{text:'1', key: '1'}, {text:'2', key:'2'}],
+		beef: 0,
+		veg: 0,
+		chicken: 0,
+		total: 0,
+		date: snapShot.val().date,
+		image: require('../images/simple.jpg')
+	};
+
+	Store.setInitData(initData);
+
 	Actions.appInit(() => {
 		ReactDOM.render( <App/>, window.document.getElementById('target'));
 		console.log('React App Started.');
