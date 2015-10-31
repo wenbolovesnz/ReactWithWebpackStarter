@@ -9,6 +9,10 @@ var _data = {};
 
 var Store = Object.assign({}, EventEmitter.prototype, {
 
+	getTotalOrders: function(){
+		return _data.beef + _data.chicken + _data.veg;
+	},
+
 	getInitData: function() {
 		return _data;
 	},
@@ -39,8 +43,26 @@ AppDispatcher.register(function(action) {
 				_data = action.appInitData;
 				Store.emitChange();
 			break;
-		case Constants.ADD_BEEF:
-			_data.total++;
+		case Constants.MINUS:
+			if(action.data.type === 'beef'){
+				_data.beef--;
+			}else if(action.data.type === 'chicken'){
+				_data.chicken--;
+			} else {
+				_data.veg--;
+			}
+			_data.total = Store.getTotalOrders();
+			Store.emitChange();
+			break;
+		case Constants.ADD:
+			if(action.data.type === 'beef'){
+				_data.beef++;
+			}else if(action.data.type === 'chicken'){
+				_data.chicken++;
+			} else {
+				_data.veg++;
+			}
+			_data.total = Store.getTotalOrders();
 			Store.emitChange();
 			break;
 		default:

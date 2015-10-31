@@ -11,12 +11,20 @@ const Actions = {
 		callback()
 	},
 
-	addBeef: function(eventData) {
+	add: function(eventData) {
 		AppDispatcher.dispatch({
-			actionType: Constants.ADD_BEEF,
+			actionType: Constants.ADD,
+			data: eventData
+		});
+	},
+
+	minus: function(eventData) {
+		AppDispatcher.dispatch({
+			actionType: Constants.MINUS,
 			data: eventData
 		});
 	}
+
 };
 
 module.exports = Actions;

@@ -10,8 +10,15 @@ body{
     color: @fontColor;
   }
 
+  .row{
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+
   #appHeader{
     text-align: center;
+    margin-left: 15px;
+    margin-right: 15px;
     div{
       background-color: #b71c1c !important;
       height: 60px;
@@ -27,12 +34,38 @@ body{
   }
 
   #summary{
-    background-color: rgba(0,0,0,.2);
+    h3{
+      margin-top: 0px;
+    }
+    margin-top: 10px;
     color: @fontColor;
+     > div{
+      padding-top: 15px;
+      padding-bottom: 15px;
+      padding-left: 30px;
+      padding-right: 30px;
+      background-color: rgba(0,0,0,.2);
+    }
   }
 
   #products{
-    background-color: rgba(0,0,0,.2);
+    margin-top: 10px;
+    .foodType{
+      background-color: rgba(0,0,0,.2);
+      .foodTypePanel{
+        padding-bottom: 10px;
+      }
+      img{
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
+      margin-bottom: 10px;
+      .orderCount{
+        font-size: larger;
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+    }
     color: @fontColor;
   }
   #appLoadingBarContainer{
