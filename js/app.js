@@ -15,29 +15,44 @@ const Mui = require('material-ui');
 const MyRawTheme = require('./myTheme');
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const ThemeDecorator = require('material-ui/lib/styles/theme-decorator');
-const Firebase = require('firebase');
 const RaisedButton = Mui.RaisedButton;
-const Paper = Mui.Paper;
-const AppLoadingBar = require('./appLoadingBar');;
-const Summary = require('./summary');;
-const Notification = require('./notification');;
-const FoodType = require('./foodType');;
-const Actions = require('./actions');
-const Store = require('./store');
+const IconButton = Mui.IconButton;
+const Login = require('./login');
+const AppHeader = require('./appHeader');
+const FirebaseRef = require('./firebaseRef');
+const Order = require('./order');
+import { Router, Route, Link, IndexRoute, History } from 'react-router'
 
-const AppHeader = React.createClass({
-	render(){
-		return (
-			<div id='appHeader'>
-				<Paper zDepth={1}>
-					<h2>Maria Mulata</h2>
-				</Paper>
-			</div>
-		);
-	}
-});
 
 const App = React.createClass({
+	mixins: [ History ],
+
+	getInitialState() {
+		return {
+			loggedIn: FirebaseRef.getAuth()
+		}
+	},
+
+	_logout(){
+		FirebaseRef.unauth();
+		this.history.pushState(null, '/login')
+	},
+
+	_updateAuth(authData) {
+		if(authData){
+			this.setState({
+				loggedIn: true
+			});
+		}else{
+			this.setState({
+				loggedIn: false
+			});
+		}
+	},
+
+	componentWillMount() {
+		FirebaseRef.onAuth(this._updateAuth);
+	},
 
 	childContextTypes : {
 		muiTheme: React.PropTypes.object
@@ -49,62 +64,40 @@ const App = React.createClass({
 		};
 	},
 
-	getInitialState(){
-		return Store.getInitData();
-	},
-
-	componentDidMount() {
-		Store.addChangeListener(this._onChange);
-	},
-
-	componentWillUnmount() {
-		Store.removeChangeListener(this._onChange);
-	},
-
-	_onChange() {
-		this.setState(Store.getInitData());
-	},
-
 	render(){
 		return <div>
 			<AppHeader />
-			<Notification  date={this.state.date}/>
-			<div className="row">
-				<Summary total={this.state.total} beef={this.state.beef} chicken={this.state.chicken} veg={this.state.veg} />
-				<div id='products' className="col-lg-8 col-md-8 col-sm-12">
-					<FoodType image= {this.state.image} title='Beef' type='beef' subtitle='Beef mince with potato.' beef={this.state.beef}/>
-					<FoodType image= {this.state.image} title='Chicken' type='chicken' subtitle='Soft chicken meat with potato.' beef={this.state.chicken}/>
-					<FoodType image= {this.state.image} title='Vegetables' type='veg' subtitle='Fresh vegetables.' beef={this.state.veg}/>
-				</div>
-			</div>
+			{ this.state.loggedIn ? (<div className="row ">
+				<IconButton iconStyle={{color:"whitesmoke" }}
+					className="pull-right logout-btn"
+					iconClassName="material-icons"
+					tooltipPosition="bottom-center"
+					onClick={this._logout}
+					tooltip="Log out">exit_to_app</IconButton></div>): ''}
+			{this.props.children}
 		</div>
 	}
 });
 
-ReactDOM.render(<AppLoadingBar />, window.document.getElementById('target'));
 
-let firebase  = new Firebase("https://food-ordering.firebaseio.com/");
+let requireAuth = (nextState, replaceState) => {
+	if (!FirebaseRef.getAuth()){
+		replaceState({ nextPathname: nextState.location.pathname }, '/login')
+	}
+};
 
-firebase.child('orders').limitToLast(1).on('child_added', (snapShot) => {
-	console.log(snapShot.val());
+ReactDOM.render((
+	<Router>
+		<Route path="/" component={App}>
+			<IndexRoute component={Order} onEnter={requireAuth} />
+			<Route path="order" component={Order} onEnter={requireAuth} />
+			<Route path="login" component={Login} />
+		</Route>
+	</Router>
+), window.document.getElementById('target'));
 
-	let initData = {
-		items: [{text:'1', key: '1'}, {text:'2', key:'2'}],
-		beef: 0,
-		veg: 0,
-		chicken: 0,
-		total: 0,
-		date: snapShot.val().date,
-		image: require('../images/simple.jpg')
-	};
 
-	Store.setInitData(initData);
 
-	Actions.appInit(() => {
-		ReactDOM.render( <App/>, window.document.getElementById('target'));
-		console.log('React App Started.');
-	});
-});
 
 
 

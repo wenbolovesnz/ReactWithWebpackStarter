@@ -37,7 +37,7 @@ const Summary = React.createClass({
 							<b>Total</b>
 						</div>
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-							* {this.props.total}
+							* {this.props.beef + this.props.chicken + this.props.veg}
 						</div>
 					</div>
 				</div>

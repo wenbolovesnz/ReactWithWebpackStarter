@@ -1,7 +1,8 @@
+
 var AppDispatcher = require('./appDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var Constants = require('./constants');
-
+const FirebaseRef = require('./firebaseRef');
 var CHANGE_EVENT = 'change';
 
 var _data = {};
@@ -14,6 +15,47 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 	},
 
 	getInitData: function() {
+		FirebaseRef.child('orders').limitToLast(1).on('child_added', (snapShot) => {
+			let keyFromOders = snapShot.key();
+			let orderData = snapShot.val();
+
+			let initData = {
+				beef: 0,
+				veg: 0,
+				chicken: 0,
+				date: snapShot.val().date,
+				image: require('../images/pic1.jpg')
+			};
+
+			let userAuthData = FirebaseRef.getAuth();
+
+			FirebaseRef.child('users').child(userAuthData.uid).child('orders').limitToLast(1).on('child_added', (orderSnap) => {
+				var order = orderSnap.val();
+				var keyFromUser;
+
+				if(order){
+					keyFromUser = orderSnap.key();
+				}
+
+				if(keyFromUser === keyFromOders){
+					var userOrder = orderData.entries[userAuthData.uid];
+					initData.beef = userOrder.beef || 0;
+					initData.chicken = userOrder.chicken || 0;
+					initData.veg = userOrder.veg || 0;
+				}
+
+				this.setInitData(initData);
+				this.emitChange()
+
+			});
+
+			console.log(FirebaseRef.getAuth());
+
+
+		});
+	},
+
+	getData: function(){
 		return _data;
 	},
 
@@ -51,7 +93,6 @@ AppDispatcher.register(function(action) {
 			} else {
 				_data.veg--;
 			}
-			_data.total = Store.getTotalOrders();
 			Store.emitChange();
 			break;
 		case Constants.ADD:
@@ -62,7 +103,6 @@ AppDispatcher.register(function(action) {
 			} else {
 				_data.veg++;
 			}
-			_data.total = Store.getTotalOrders();
 			Store.emitChange();
 			break;
 		default:
