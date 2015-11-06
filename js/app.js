@@ -21,8 +21,9 @@ const Login = require('./login');
 const AppHeader = require('./appHeader');
 const FirebaseRef = require('./firebaseRef');
 const Order = require('./order');
-import { Router, Route, Link, IndexRoute, History } from 'react-router'
+const SignUp = require('./signup');
 
+import { Router, Route, Link, IndexRoute, History } from 'react-router'
 
 const App = React.createClass({
 	mixins: [ History ],
@@ -92,6 +93,7 @@ ReactDOM.render((
 			<IndexRoute component={Order} onEnter={requireAuth} />
 			<Route path="order" component={Order} onEnter={requireAuth} />
 			<Route path="login" component={Login} />
+			<Route path="signup" component={SignUp} />
 		</Route>
 	</Router>
 ), window.document.getElementById('target'));

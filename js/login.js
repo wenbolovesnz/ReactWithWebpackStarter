@@ -1,8 +1,9 @@
 const React = require('react');
-import { History } from 'react-router'
+import { Link, History } from 'react-router'
 const FirebaseRef = require('./firebaseRef');
 const Mui = require('material-ui');
 const TextField = Mui.TextField;
+const FlatButton = Mui.FlatButton;
 const RaisedButton = Mui.RaisedButton;
 
 
@@ -34,7 +35,7 @@ const Login = React.createClass({
 			password: this.state.password
 		}, (error, authData) => {
 			if (error) {
-				this.state.error = error;
+				this.state.error = error.message;
 				this.setState(this.state);
 			} else {
 				console.log("Authenticated successfully with payload:", authData);
@@ -78,13 +79,15 @@ const Login = React.createClass({
 								value={this.state.password}
 								hintStyle={{color: 'whitesmoke'}}
 								onChange={this._handlePasswordChanges} />
-
 							<div>
 								<RaisedButton type="submit" label="Login" primary={true}/>
-								<div className="error">
-					        {this.state.error}
-								</div>
+								<Link to="/signup" className="pull-right"><RaisedButton label="Sign up" primary={true} /></Link>
 							</div>
+							<div className="error">
+					        {this.state.error}
+							</div>
+
+
 
 
 						</form>
@@ -92,6 +95,7 @@ const Login = React.createClass({
 					</div>
 
 				</div>
+
 			</div>
 		)
 	}

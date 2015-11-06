@@ -10,10 +10,6 @@ var _data = {};
 
 var Store = Object.assign({}, EventEmitter.prototype, {
 
-	getTotalOrders: function(){
-		return _data.beef + _data.chicken + _data.veg;
-	},
-
 	getInitData: function() {
 		FirebaseRef.child('orders').limitToLast(1).on('child_added', (snapShot) => {
 			let keyFromOders = snapShot.key();
