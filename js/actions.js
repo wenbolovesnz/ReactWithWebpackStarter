@@ -23,6 +23,12 @@ const Actions = {
 			actionType: Constants.MINUS,
 			data: eventData
 		});
+	},
+
+	submitOrder: function(){
+		AppDispatcher.dispatch({
+			actionType: Constants.SUBMIT_ORDER
+		});
 	}
 
 };

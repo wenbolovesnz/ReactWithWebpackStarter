@@ -1,6 +1,10 @@
 const React = require('react');
-
+const RaisedButton = require('material-ui').RaisedButton;
+const Actions = require('./actions');
 const Summary = React.createClass({
+	_handleSubmit(){
+		Actions.submitOrder();
+	},
 	render(){
 		return(
 			<div id='summary' className="col-lg-4 col-md-4 col-sm-12">
@@ -40,7 +44,14 @@ const Summary = React.createClass({
 							* {this.props.beef + this.props.chicken + this.props.veg}
 						</div>
 					</div>
+
+					<div className="submitOder">
+						<RaisedButton  type="submit" label="Submit" primary={true} onClick={this._handleSubmit}/>
+					</div>
+
 				</div>
+
+
 			</div>
 		)
 	}

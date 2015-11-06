@@ -10,6 +10,22 @@ var _data = {};
 
 var Store = Object.assign({}, EventEmitter.prototype, {
 
+	submitOrder: function(){
+		var data = this.getData();
+		FirebaseRef.child('orders').child(data.currentOrderKey).child('entries').child(FirebaseRef.getAuth().uid)
+		.set({
+					username: data.username,
+					beef: data.beef,
+					chicken: data.chicken,
+					veg: data.veg
+				}, () => {
+				FirebaseRef.child('users').child(FirebaseRef.getAuth().uid).child('orders').child(data.currentOrderKey)
+				.set({date:data.date}, ()=>{
+						this.emitChange();
+					});
+			});
+	},
+
 	getInitData: function() {
 		FirebaseRef.child('orders').limitToLast(1).on('child_added', (snapShot) => {
 			let keyFromOders = snapShot.key();
@@ -20,10 +36,36 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 				veg: 0,
 				chicken: 0,
 				date: snapShot.val().date,
+				currentOrderKey: keyFromOders,
 				image: require('../images/pic1.jpg')
 			};
 
 			let userAuthData = FirebaseRef.getAuth();
+
+			FirebaseRef.child('users').child(userAuthData.uid).on('value', (userDataSnap) => {
+				var userData = userDataSnap.val();
+
+				var userCurrentOrder;
+				if(userData.orders){
+					userCurrentOrder = userData.orders[keyFromOders];
+				}
+
+				if(userCurrentOrder){
+					var userOrder = orderData.entries[userAuthData.uid];
+					initData.beef = userOrder.beef || 0;
+					initData.chicken = userOrder.chicken || 0;
+					initData.veg = userOrder.veg || 0;
+				}else{
+					initData.beef = 0;
+					initData.chicken =  0;
+					initData.veg = 0;
+				}
+				initData.username = userData.username;
+
+				this.setInitData(initData);
+				this.emitChange()
+
+			});
 
 			FirebaseRef.child('users').child(userAuthData.uid).child('orders').limitToLast(1).on('child_added', (orderSnap) => {
 				var order = orderSnap.val();
@@ -44,9 +86,6 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 				this.emitChange()
 
 			});
-
-			console.log(FirebaseRef.getAuth());
-
 
 		});
 	},
@@ -89,6 +128,10 @@ AppDispatcher.register(function(action) {
 			} else {
 				_data.veg--;
 			}
+			Store.emitChange();
+			break;
+		case Constants.SUBMIT_ORDER:
+			Store.submitOrder.call(Store);
 			Store.emitChange();
 			break;
 		case Constants.ADD:

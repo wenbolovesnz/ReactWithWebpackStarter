@@ -64,7 +64,7 @@ const SignUp = React.createClass({
 								this.error = "Login Failed!";
 							} else {
 								userData.provider = authData.provider;
-								userData.name = authData.password.email.replace(/@.*/, '');
+								userData.username = authData.password.email.replace(/@.*/, '');
 								FirebaseRef.child("users").child(userData.uid).set(userData);
 
 								const { location } = this.props;
