@@ -12,6 +12,10 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 
 	submitOrder: function(){
 		var data = this.getData();
+		data.isSubmitting = true;
+		data.alterBox = false;
+		this.setInitData(data);
+		this.emitChange;
 		FirebaseRef.child('orders').child(data.currentOrderKey).child('entries').child(FirebaseRef.getAuth().uid)
 		.set({
 					username: data.username,
@@ -21,6 +25,9 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 				}, () => {
 				FirebaseRef.child('users').child(FirebaseRef.getAuth().uid).child('orders').child(data.currentOrderKey)
 				.set({date:data.date}, ()=>{
+						data.isSubmitting = false;
+						data.alterBox = true;
+						this.setInitData(data);
 						this.emitChange();
 					});
 			});
@@ -35,6 +42,7 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 				beef: 0,
 				veg: 0,
 				chicken: 0,
+				isSubmitting: false,
 				date: snapShot.val().date,
 				currentOrderKey: keyFromOders,
 				image: require('../images/pic1.jpg')

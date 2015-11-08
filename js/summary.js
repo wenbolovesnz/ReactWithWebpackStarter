@@ -1,5 +1,8 @@
 const React = require('react');
 const RaisedButton = require('material-ui').RaisedButton;
+const CircularProgress = require('material-ui').CircularProgress;
+const AlterBox = require('./alertBox');
+
 const Actions = require('./actions');
 const Summary = React.createClass({
 	_handleSubmit(){
@@ -46,8 +49,10 @@ const Summary = React.createClass({
 					</div>
 
 					<div className="submitOder">
-						<RaisedButton  type="submit" label="Submit" primary={true} onClick={this._handleSubmit}/>
+						<RaisedButton  type="submit" label="Submit" primary={true} onClick={this._handleSubmit} disabled={this.props.isSubmitting}/>
 					</div>
+                    {this.props.alterBox ? (<AlterBox  message="Your order has been saved."/>) : ''}
+
 
 				</div>
 
