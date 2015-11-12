@@ -22,8 +22,20 @@ const AppHeader = require('./appHeader');
 const FirebaseRef = require('./firebaseRef');
 const Order = require('./order');
 const SignUp = require('./signup');
+const ManageOrders = require('./management');
+const ManageOrder = require('./manageOrder');
 
 import { Router, Route, Link, IndexRoute, History } from 'react-router'
+
+const NoMatch = React.createClass({
+	render() {
+		return (
+			<div>
+				<h1>No Match</h1>
+			</div>
+		)
+	}
+});
 
 const App = React.createClass({
 	mixins: [ History ],
@@ -48,6 +60,7 @@ const App = React.createClass({
 			this.setState({
 				loggedIn: false
 			});
+			this.history.pushState(null, '/login')
 		}
 	},
 
@@ -94,6 +107,9 @@ ReactDOM.render((
 			<Route path="order" component={Order} onEnter={requireAuth} />
 			<Route path="login" component={Login} />
 			<Route path="signup" component={SignUp} />
+			<Route path="manageOrders" component={ManageOrders}/>
+			<Route path="/manageOrders/:key" component={ManageOrder}/>
+			<Route path="*" component={NoMatch}/>
 		</Route>
 	</Router>
 ), window.document.getElementById('target'));

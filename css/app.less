@@ -3,6 +3,7 @@
 
 
 @fontColor: @whiteColor;
+@secondLayerBackgroundColor: rgba(0,0,0,.2);
 
 body{
 
@@ -37,7 +38,7 @@ body{
     padding-left: 15px;
     padding-right: 15px;
     padding-bottom: 15px;
-    background-color: rgba(0,0,0,.2);
+    background-color: @secondLayerBackgroundColor;
     input{
       color: @fontColor !important;
     }
@@ -58,7 +59,7 @@ body{
       padding-bottom: 15px;
       padding-left: 30px;
       padding-right: 30px;
-      background-color: rgba(0,0,0,.2);
+      background-color: @secondLayerBackgroundColor;
     }
   }
 
@@ -97,5 +98,10 @@ body{
 
   .submitOder{
     margin-top: 25px;
+  }
+
+  table{
+    color: @fontColor;
+    background-color: @secondLayerBackgroundColor;
   }
 }

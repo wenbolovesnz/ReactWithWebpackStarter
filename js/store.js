@@ -6,7 +6,8 @@ const FirebaseRef = require('./firebaseRef');
 var CHANGE_EVENT = 'change';
 
 var _data = {};
-
+var _ordersData = [];
+var _orderDetailsByKey = { isLoading: true, data: []};
 
 var Store = Object.assign({}, EventEmitter.prototype, {
 
@@ -16,28 +17,68 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 		data.alterBox = false;
 		this.setInitData(data);
 		this.emitChange;
-		FirebaseRef.child('orders').child(data.currentOrderKey).child('entries').child(FirebaseRef.getAuth().uid)
-		.set({
-					username: data.username,
-					beef: data.beef,
-					chicken: data.chicken,
-					veg: data.veg
-				}, () => {
-				FirebaseRef.child('users').child(FirebaseRef.getAuth().uid).child('orders').child(data.currentOrderKey)
-				.set({date:data.date}, ()=>{
-						data.isSubmitting = false;
-						data.alterBox = true;
-						this.setInitData(data);
-						this.emitChange();
-					});
+
+		FirebaseRef.child('users').child(FirebaseRef.getAuth().uid).child('orders').child(data.currentOrderKey)
+			.set({
+				date:data.date,
+				beef: data.beef,
+				chicken: data.chicken,
+				veg: data.veg,
+				hasOrder: true
+			}, ()=>{
+				data.isSubmitting = false;
+				data.alterBox = true;
+				this.setInitData(data);
+				this.emitChange();
 			});
+
+
+	},
+
+	getOrderDetailsByKeyFromLocal: function(){
+		return _orderDetailsByKey;
+	},
+
+	getOrderDetailsByKeyFromRemote: function(orderKey){
+		_orderDetailsByKey.isLoading = true;
+		_orderDetailsByKey.data = [];
+
+		FirebaseRef.child('users').on('value', (userSnap) => {
+			var usersData = userSnap.val();
+			Object.keys(usersData).forEach((key) => {
+				var userData = usersData[key];
+
+				if(userData.orders[orderKey] && userData.orders[orderKey].hasOrder){
+					userData.currentOrderDetailsForUser = userData.orders[orderKey];
+					_orderDetailsByKey.data.push(userData);
+					_orderDetailsByKey.date = userData.currentOrderDetailsForUser.date;
+				}
+			});
+
+
+			_orderDetailsByKey.isLoading = false;
+			this.emitChange();
+		});
+	},
+
+	getDataForManagement: function(){
+		var orders = [];
+		FirebaseRef.child('orders').on('child_added', (snapShot) => {
+			let key = snapShot.key();
+			let value = snapShot.val();
+			orders.push({
+				key: key,
+				value: value
+			});
+
+			this.setOrdersData(orders);
+			this.emitChange();
+		});
 	},
 
 	getInitData: function() {
 		FirebaseRef.child('orders').limitToLast(1).on('child_added', (snapShot) => {
 			let keyFromOders = snapShot.key();
-			let orderData = snapShot.val();
-
 			let initData = {
 				beef: 0,
 				veg: 0,
@@ -59,10 +100,9 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 				}
 
 				if(userCurrentOrder){
-					var userOrder = orderData.entries[userAuthData.uid];
-					initData.beef = userOrder.beef || 0;
-					initData.chicken = userOrder.chicken || 0;
-					initData.veg = userOrder.veg || 0;
+					initData.beef = userCurrentOrder.beef || 0;
+					initData.chicken = userCurrentOrder.chicken || 0;
+					initData.veg = userCurrentOrder.veg || 0;
 				}else{
 					initData.beef = 0;
 					initData.chicken =  0;
@@ -74,27 +114,6 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 				this.emitChange()
 
 			});
-
-			FirebaseRef.child('users').child(userAuthData.uid).child('orders').limitToLast(1).on('child_added', (orderSnap) => {
-				var order = orderSnap.val();
-				var keyFromUser;
-
-				if(order){
-					keyFromUser = orderSnap.key();
-				}
-
-				if(keyFromUser === keyFromOders){
-					var userOrder = orderData.entries[userAuthData.uid];
-					initData.beef = userOrder.beef || 0;
-					initData.chicken = userOrder.chicken || 0;
-					initData.veg = userOrder.veg || 0;
-				}
-
-				this.setInitData(initData);
-				this.emitChange()
-
-			});
-
 		});
 	},
 
@@ -104,6 +123,14 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 
 	setInitData: function(data){
 		_data = data;
+	},
+
+	getOrdersData: function(){
+		return _ordersData;
+	},
+
+	setOrdersData: function(data){
+		_ordersData = data;
 	},
 
 	emitChange: function() {

@@ -4,12 +4,12 @@ const Snackbar = require('material-ui').Snackbar;
 const AlterBox = React.createClass({
     render(){
         return (
-            <Snackbar
-                message={this.props.message}
-                autoHideDuration={2500}
-                openOnMount={true}
-                />
-        );
+	        <div>
+		        <Snackbar
+			        message={this.props.message}
+			        autoHideDuration={2500}
+			        openOnMount={true} />
+	        </div>);
     }
 });
 module.exports = AlterBox;
