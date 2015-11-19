@@ -41,9 +41,8 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 
 	getOrderDetailsByKeyFromRemote: function(orderKey){
 		_orderDetailsByKey.isLoading = true;
-		_orderDetailsByKey.data = [];
-
 		FirebaseRef.child('users').on('value', (userSnap) => {
+			_orderDetailsByKey.data = [];
 			var usersData = userSnap.val();
 			Object.keys(usersData).forEach((key) => {
 				var userData = usersData[key];

@@ -38,7 +38,7 @@ const Order = React.createClass({
 				<Notification  date={this.state.date}/>
 				<div className="row">
 					<Summary beef={this.state.beef} chicken={this.state.chicken} veg={this.state.veg}  isSubmitting= {this.state.isSubmitting}
-							 alterBox= {this.state.alterBox }/>
+							 alterBox= {this.state.alterBox } username={this.state.username}/>
 					<div id='products' className="col-lg-8 col-md-8 col-sm-12">
 						<FoodType image= {this.state.image} title='Beef' type='beef' subtitle='Beef mince with potato.' beef={this.state.beef}/>
 						<FoodType image= {this.state.image} title='Chicken' type='chicken' subtitle='Soft chicken meat with potato.' beef={this.state.chicken}/>

@@ -12,7 +12,8 @@ const Summary = React.createClass({
 		return(
 			<div id='summary' className="col-lg-4 col-md-4 col-sm-12">
 				<div>
-					<h3>Order Summary</h3>
+					<h4>Good day, {this.props.username}</h4>
+					<h4>Order Summary</h4>
 					<div className="row">
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 							Beef
