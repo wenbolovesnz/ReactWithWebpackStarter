@@ -1,7 +1,6 @@
 let AppDispatcher = require('./appDispatcher');
 let Constants = require('./constants');
 let Store = require('./store');
-
 const Actions = {
 	appInit: function(callback) {
 		AppDispatcher.dispatch({
