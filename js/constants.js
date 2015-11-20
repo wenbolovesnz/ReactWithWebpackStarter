@@ -4,5 +4,6 @@ module.exports = keyMirror({
 	APP_INIT: null,
 	ADD: null,
 	MINUS: null,
-	SUBMIT_ORDER: null
+	SUBMIT_ORDER: null,
+	ADD_ORDER_DATE: null
 });

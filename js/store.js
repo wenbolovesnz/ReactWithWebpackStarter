@@ -11,6 +11,15 @@ var _orderDetailsByKey = { isLoading: true, data: []};
 
 var Store = Object.assign({}, EventEmitter.prototype, {
 
+	createAnewOderDate: function(dateString){
+		var newOrderKeyRef = FirebaseRef.child('orders').push();
+		newOrderKeyRef.set({
+			date: dateString
+		}, ()=>{
+			this.emitChange();
+		});
+	},
+
 	submitOrder: function(){
 		var data = this.getData();
 		data.isSubmitting = true;
@@ -47,14 +56,12 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 			Object.keys(usersData).forEach((key) => {
 				var userData = usersData[key];
 
-				if(userData.orders[orderKey] && userData.orders[orderKey].hasOrder){
+				if(userData.orders && userData.orders[orderKey] && userData.orders[orderKey].hasOrder){
 					userData.currentOrderDetailsForUser = userData.orders[orderKey];
 					_orderDetailsByKey.data.push(userData);
 					_orderDetailsByKey.date = userData.currentOrderDetailsForUser.date;
 				}
 			});
-
-
 			_orderDetailsByKey.isLoading = false;
 			this.emitChange();
 		});
@@ -167,6 +174,9 @@ AppDispatcher.register(function(action) {
 		case Constants.SUBMIT_ORDER:
 			Store.submitOrder.call(Store);
 			Store.emitChange();
+			break;
+		case Constants.ADD_ORDER_DATE:
+			Store.createAnewOderDate(action.data).call(Store);
 			break;
 		case Constants.ADD:
 			if(action.data.type === 'beef'){
