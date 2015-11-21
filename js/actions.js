@@ -28,7 +28,14 @@ const Actions = {
 		AppDispatcher.dispatch({
 			actionType: Constants.SUBMIT_ORDER
 		});
-	}
+	},
+
+	createNewOrder: function(eventData){
+        AppDispatcher.dispatch({
+            actionType: Constants.ADD_ORDER_DATE,
+            data: eventData
+        });
+    }
 
 };
 

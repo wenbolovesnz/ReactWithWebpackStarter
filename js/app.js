@@ -24,6 +24,8 @@ const Order = require('./order');
 const SignUp = require('./signup');
 const ManageOrders = require('./management');
 const ManageOrder = require('./manageOrder');
+const Account = require('./Account');
+const ResetPassword = require('./resetPassword');
 
 import { Router, Route, Link, IndexRoute, History } from 'react-router'
 
@@ -48,7 +50,11 @@ const App = React.createClass({
 
 	_logout(){
 		FirebaseRef.unauth();
-		this.history.pushState(null, '/login')
+		this.history.pushState(null, '/login');
+	},
+
+	_goToAccount(){
+        this.history.pushState(null, '/account');
 	},
 
 	_updateAuth(authData) {
@@ -60,7 +66,7 @@ const App = React.createClass({
 			this.setState({
 				loggedIn: false
 			});
-			this.history.pushState(null, '/login')
+			this.history.pushState(null, '/login');
 		}
 	},
 
@@ -87,7 +93,15 @@ const App = React.createClass({
 					iconClassName="material-icons"
 					tooltipPosition="bottom-center"
 					onClick={this._logout}
-					tooltip="Log out">exit_to_app</IconButton></div>): ''}
+					tooltip="Log out">exit_to_app</IconButton>
+
+				<IconButton iconStyle={{color:"whitesmoke" }}
+							className="pull-right account-btn"
+							iconClassName="material-icons"
+							tooltipPosition="bottom-center"
+							onClick={this._goToAccount}
+							tooltip="Account">person</IconButton>
+			</div>): ''}
 			{this.props.children}
 		</div>
 	}
@@ -107,6 +121,8 @@ ReactDOM.render((
 			<Route path="order" component={Order} onEnter={requireAuth} />
 			<Route path="login" component={Login} />
 			<Route path="signup" component={SignUp} />
+			<Route path="account" component={Account} />
+			<Route path="resetPassword" component={ResetPassword} />
 			<Route path="manageOrders" component={ManageOrders}/>
 			<Route path="/manageOrders/:key" component={ManageOrder}/>
 			<Route path="*" component={NoMatch}/>

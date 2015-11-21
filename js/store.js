@@ -176,7 +176,7 @@ AppDispatcher.register(function(action) {
 			Store.emitChange();
 			break;
 		case Constants.ADD_ORDER_DATE:
-			Store.createAnewOderDate(action.data).call(Store);
+			Store.createAnewOderDate.call(Store, action.data);
 			break;
 		case Constants.ADD:
 			if(action.data.type === 'beef'){

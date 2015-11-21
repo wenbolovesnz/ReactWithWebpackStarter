@@ -14,7 +14,7 @@ const Login = React.createClass({
 		return {
 			email: '',
 			password:'',
-			error: false,
+			error: '',
 			isSubmitting: false
 		}
 	},
@@ -89,6 +89,10 @@ const Login = React.createClass({
 								<div>
 									<RaisedButton type="submit" label="Login" primary={true} disabled = {this.state.isSubmitting}/>
 									<Link to="/signup" className="pull-right"><RaisedButton label="Sign up" primary={true} disabled = {this.state.isSubmitting} /></Link>
+								</div>
+
+								<div>
+                                    <Link to="/resetPassword">Forgot password?</Link>
 								</div>
 
 								<div className="error">
