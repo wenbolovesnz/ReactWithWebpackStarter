@@ -19,9 +19,21 @@ const ManageOrder = React.createClass({
 		Store.removeChangeListener(this._onChange);
 	},
 
+	_getTotalFor(type){
+		var sumUp = function(sum, user){
+			 sum += (user.currentOrderDetailsForUser[type] || 0);
+			return sum;
+		};
+		return this.state.data.reduce(sumUp, 0);
+
+	},
+
 	_getTotal(){
 		return this.state.data.reduce((sum, user) => {
-			sum += (user.currentOrderDetailsForUser.beef || 0) + (user.currentOrderDetailsForUser.veg || 0) + (user.currentOrderDetailsForUser.chicken || 0);
+			sum += (user.currentOrderDetailsForUser.beef || 0) +
+							(user.currentOrderDetailsForUser.veg || 0) +
+							(user.currentOrderDetailsForUser.chicken || 0) +
+							(user.currentOrderDetailsForUser.alfa || 0);
 			return sum;
 		}, 0);
 	},
@@ -49,8 +61,9 @@ const ManageOrder = React.createClass({
 										<tr>
 											<th>Username</th>
 											<th>Beef</th>
-											<th>Veg</th>
 											<th>Chicken</th>
+											<th>Veg</th>
+											<th>Alfajores</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -59,6 +72,13 @@ const ManageOrder = React.createClass({
 												<OrderRow key={user.uid} value={user}/>
 											);
 										})}
+										<tr>
+											<td>Total</td>
+											<td>{this._getTotalFor('beef')}</td>
+											<td>{this._getTotalFor('chicken')}</td>
+											<td>{this._getTotalFor('veg')}</td>
+											<td>{this._getTotalFor('alfa')}</td>
+										</tr>
 									</tbody>
 								</table>
 						</div>
@@ -80,8 +100,9 @@ const OrderRow = React.createClass({
 		<tr>
 			<td>{this.props.value.username}</td>
 			<td>{this.props.value.currentOrderDetailsForUser.beef}</td>
-			<td>{this.props.value.currentOrderDetailsForUser.veg}</td>
 			<td>{this.props.value.currentOrderDetailsForUser.chicken}</td>
+			<td>{this.props.value.currentOrderDetailsForUser.veg}</td>
+			<td>{this.props.value.currentOrderDetailsForUser.alfa}</td>
 		</tr>);
 	}
 });

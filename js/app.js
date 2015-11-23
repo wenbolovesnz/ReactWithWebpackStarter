@@ -96,7 +96,7 @@ const App = React.createClass({
 					tooltip="Log out">exit_to_app</IconButton>
 
 				<IconButton iconStyle={{color:"whitesmoke" }}
-							className="pull-right account-btn"
+							className="pull-left account-btn"
 							iconClassName="material-icons"
 							tooltipPosition="bottom-center"
 							onClick={this._goToAccount}

@@ -2,8 +2,15 @@ const React = require('react');
 const Mui = require('material-ui');
 const RaisedButton = Mui.RaisedButton;
 const Actions = require('./actions');
+const TweenMax = require('gsap');
 
 const FoodType = React.createClass({
+
+		componentDidMount() {
+			var node = this.getDOMNode();
+			TweenMax.from(node, 2, {opacity: 0, scale: 0, ease: Bounce.easeOut});
+		},
+
     handleAdd(){
         Actions.add({type: this.props.type});
     },

@@ -5,7 +5,6 @@ const Summary = require('./summary');;
 const Notification = require('./notification');;
 const FoodType = require('./foodType');
 
-
 const Order = React.createClass({
 
 	getInitialState(){
@@ -17,6 +16,7 @@ const Order = React.createClass({
 	componentDidMount() {
 		Store.addChangeListener(this._onChange);
 		Store.getInitData();
+		TweenMax.staggerFrom('.foodType', 2, {opacity: 0, scale: 0, ease: Bounce.easeOut})
 	},
 
 	componentWillUnmount() {
@@ -37,12 +37,13 @@ const Order = React.createClass({
 			return <div>
 				<Notification  date={this.state.date}/>
 				<div className="row">
-					<Summary beef={this.state.beef} chicken={this.state.chicken} veg={this.state.veg}  isSubmitting= {this.state.isSubmitting}
+					<Summary beef={this.state.beef} chicken={this.state.chicken} veg={this.state.veg} alfa={this.state.alfa}  isSubmitting= {this.state.isSubmitting}
 							 alterBox= {this.state.alterBox } username={this.state.username}/>
 					<div id='products' className="col-lg-8 col-md-8 col-sm-12">
-						<FoodType image= {this.state.image} title='Beef' type='beef' subtitle='Beef mince with potato.' beef={this.state.beef}/>
-						<FoodType image= {this.state.image} title='Chicken' type='chicken' subtitle='Soft chicken meat with potato.' beef={this.state.chicken}/>
-						<FoodType image= {this.state.image} title='Vegetables' type='veg' subtitle='Fresh vegetables.' beef={this.state.veg}/>
+						<FoodType image= {this.state.image} title='Beefy' type='beef' subtitle='Premium NZ beef mince, potato and spices.' beef={this.state.beef}/>
+						<FoodType image= {this.state.image} title='Chicky' type='chicken' subtitle='Made of fresh chicken, ginger and spring onions.' beef={this.state.chicken}/>
+						<FoodType image= {this.state.image} title='Veggie' type='veg' subtitle='Delicious NZ sweet corn with mushrooms and tasty cheese.' beef={this.state.veg}/>
+						<FoodType image= {this.state.image2} title='Alfajores' type='alfa' subtitle='Hand-made shortbread filled with Manjar and covered with delicious dark and white chocolate.' beef={this.state.alfa}/>
 					</div>
 				</div>
 			</div>

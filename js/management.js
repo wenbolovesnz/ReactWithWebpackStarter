@@ -42,7 +42,7 @@ const ManageOrders = React.createClass({
     },
 
 	render(){
-        var buttonStyle = { marginBottom: '10px'};
+      var buttonStyle = { marginBottom: '10px'};
 			return (<div>
 				<div className="row">
 					<div className="col-lg-12">

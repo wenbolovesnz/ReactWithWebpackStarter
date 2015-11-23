@@ -42,10 +42,19 @@ const Summary = React.createClass({
 
 					<div className="row">
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							Alfajores
+						</div>
+						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							* {this.props.alfa}
+						</div>
+					</div>
+
+					<div className="row">
+						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 							<b>Total</b>
 						</div>
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-							* {this.props.beef + this.props.chicken + this.props.veg}
+							* {this.props.beef + this.props.chicken + this.props.veg + this.props.alfa}
 						</div>
 					</div>
 

@@ -33,6 +33,7 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 				beef: data.beef,
 				chicken: data.chicken,
 				veg: data.veg,
+				alfa: data.alfa,
 				hasOrder: true
 			}, ()=>{
 				data.isSubmitting = false;
@@ -89,10 +90,12 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 				beef: 0,
 				veg: 0,
 				chicken: 0,
+				alfa: 0,
 				isSubmitting: false,
 				date: snapShot.val().date,
 				currentOrderKey: keyFromOders,
-				image: require('../images/pic1.jpg')
+				image: require('../images/pic1.jpg'),
+				image2: require('../images/pic2.jpg')
 			};
 
 			let userAuthData = FirebaseRef.getAuth();
@@ -109,10 +112,12 @@ var Store = Object.assign({}, EventEmitter.prototype, {
 					initData.beef = userCurrentOrder.beef || 0;
 					initData.chicken = userCurrentOrder.chicken || 0;
 					initData.veg = userCurrentOrder.veg || 0;
+					initData.alfa = userCurrentOrder.alfa || 0;
 				}else{
 					initData.beef = 0;
 					initData.chicken =  0;
 					initData.veg = 0;
+					initData.alfa = 0;
 				}
 				initData.username = userData.username;
 
@@ -166,8 +171,10 @@ AppDispatcher.register(function(action) {
 				_data.beef--;
 			}else if(action.data.type === 'chicken'){
 				_data.chicken--;
-			} else {
+			} else if(action.data.type === 'veg'){
 				_data.veg--;
+			} else {
+				_data.alfa--;
 			}
 			Store.emitChange();
 			break;
@@ -183,8 +190,10 @@ AppDispatcher.register(function(action) {
 				_data.beef++;
 			}else if(action.data.type === 'chicken'){
 				_data.chicken++;
-			} else {
+			} else if(action.data.type === 'veg'){
 				_data.veg++;
+			} else {
+				_data.alfa++;
 			}
 			Store.emitChange();
 			break;
