@@ -17,8 +17,8 @@ const FoodType = React.createClass({
 	render(){
 		return(
             <div className="row foodType">
-                <div className="col-lg-4 col-md-4 hidden-xs">
-                    <img src={this.props.image} className="img-responsive" alt="simple" />
+                <div className="col-lg-4 col-md-4 col-sm-12">
+                    <img src={this.props.image} className="img-responsive" alt="food-image" />
                 </div>
                 <div className="col-lg-8 col-md-8 col-sm-12">
                     <div className="foodTypePanel">
