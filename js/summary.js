@@ -1,10 +1,16 @@
 const React = require('react');
+const ReactDOM = require('react-dom');
 const RaisedButton = require('material-ui').RaisedButton;
 const CircularProgress = require('material-ui').CircularProgress;
 const AlterBox = require('./alertBox');
-
+const TweenMax = require('gsap');
 const Actions = require('./actions');
 const Summary = React.createClass({
+
+	componentDidMount() {
+		TweenMax.from(ReactDOM.findDOMNode(this), 1, {opacity: 0, scale: 0, delay:0.5, ease: Bounce.easeOut});
+	},
+
 	_handleSubmit(){
 		Actions.submitOrder();
 	},
@@ -62,11 +68,7 @@ const Summary = React.createClass({
 						<RaisedButton  type="submit" label="Submit" primary={true} onClick={this._handleSubmit} disabled={this.props.isSubmitting}/>
 					</div>
                     {this.props.alterBox ? (<AlterBox  message="Your order has been saved."/>) : ''}
-
-
 				</div>
-
-
 			</div>
 		)
 	}
