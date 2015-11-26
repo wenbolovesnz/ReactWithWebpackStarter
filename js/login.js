@@ -5,6 +5,7 @@ const Mui = require('material-ui');
 const TextField = Mui.TextField;
 const FlatButton = Mui.FlatButton;
 const RaisedButton = Mui.RaisedButton;
+const Checkbox = Mui.Checkbox;
 const AppLoadingBar = require('./appLoadingBar');
 
 const Login = React.createClass({
@@ -88,16 +89,34 @@ const Login = React.createClass({
 									onChange={this._handlePasswordChanges} />
 								<div>
 									<RaisedButton type="submit" label="Login" primary={true} disabled = {this.state.isSubmitting}/>
-									<Link to="/signup" className="pull-right"><RaisedButton label="Sign up" primary={true} disabled = {this.state.isSubmitting} /></Link>
-								</div>
-
-								<div>
-                                    <Link to="/resetPassword">Forgot password?</Link>
 								</div>
 
 								<div className="error">
 									{this.state.error}
 								</div>
+
+								<div>
+									<Checkbox
+										iconStyle={{
+											fill: '#b71c1c'
+										}}
+										labelStyle={{
+											color:'#f8f8ff'
+										}}
+										name="rememberMe"
+										value={this.state.rememberMe}
+										label="Remember Me"/>
+								</div>
+
+								<div>
+                      <Link to="/resetPassword">Forgot your password?</Link>
+								</div>
+
+								<div>
+									<span>Don't have an account ?</span> <Link to="/signup">Register here</Link>
+								</div>
+
+
 
 							</form>
 

@@ -28,7 +28,6 @@ const FoodType = React.createClass({
                             <RaisedButton label="-" primary={true} onClick={this.handleMinus} />
                             <span className="orderCount">{this.props.beef}</span>
                             <RaisedButton label="+" primary={true} onClick={this.handleAdd} />
-
                         </div>
                     </div>
                 </div>
