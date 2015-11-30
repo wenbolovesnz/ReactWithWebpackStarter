@@ -5,5 +5,6 @@ module.exports = keyMirror({
 	ADD: null,
 	MINUS: null,
 	SUBMIT_ORDER: null,
-	ADD_ORDER_DATE: null
+	ADD_ORDER_DATE: null,
+	UPDATE_STOCK: null
 });

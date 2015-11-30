@@ -1,9 +1,10 @@
 const React = require('react');
 const Store = require('./store');
-const AppLoadingBar = require('./appLoadingBar');;
-const List = require('material-ui/lib/lists/list');
-const ListDivider = require('material-ui/lib/lists/list-divider');
-const ListItem = require('material-ui/lib/lists/list-item');
+const AppLoadingBar = require('./appLoadingBar');
+const Actions = require('./actions');
+const RaisedButton = require('material-ui').RaisedButton;
+
+
 
 const ManageOrder = React.createClass({
 	getInitialState(){
@@ -79,6 +80,7 @@ const ManageOrder = React.createClass({
 											<td>{this._getTotalFor('veg')}</td>
 											<td>{this._getTotalFor('alfa')}</td>
 										</tr>
+										<TotalStocks orderKey={this.props.params.key}/>
 									</tbody>
 								</table>
 						</div>
@@ -106,6 +108,84 @@ const OrderRow = React.createClass({
 		</tr>);
 	}
 });
+
+
+const TotalStocks= React.createClass({
+	getInitialState(){
+		return Store.getStockDataByKey(this.props.orderKey);
+	},
+
+	componentDidMount() {
+		Store.addChangeListener(this._onChange);
+	},
+
+	_onChange(){
+		let orderData = Store.getOrderData();
+		orderData.showEdit = false;
+		this.setState(orderData);
+	},
+
+	_showEdit(){
+		this.state.showEdit = true;
+		this.setState(this.state);
+	},
+
+	componentWillUnmount() {
+		Store.removeChangeListener(this._onChange);
+	},
+
+	beefChanges(event){
+		this.state.beefStock = event.target.value;
+		this.setState(this.state);
+	},
+
+	chickenChanges(event){
+		this.state.chickenStock = event.target.value;
+		this.setState(this.state);
+	},
+
+	vegChanges(event){
+		this.state.vegStock = event.target.value;
+		this.setState(this.state);
+	},
+
+	alfaChanges(event){
+		this.state.alfaStock = event.target.value;
+		this.setState(this.state);
+	},
+
+	_handleSave(){
+		this.state.orderKey = this.props.orderKey;
+		Actions.saveStockUpdate(this.state);
+	},
+
+	render(){
+		if(!this.state.showEdit){
+			return (
+					<tr>
+						<td>Total stocks:
+							<RaisedButton label="Edit" primary={true} onClick={this._showEdit}/>
+						</td>
+						<td>{this.state.beefStock}</td>
+						<td>{this.state.chickenStock}</td>
+						<td>{this.state.vegStock}</td>
+						<td>{this.state.alfaStock}</td>
+					</tr>
+			);
+		}else{
+			return (
+					<tr>
+						<td><RaisedButton style={{marginLeft: 10}}label="Save" primary={true} onClick={this._handleSave} /></td>
+						<td><input onChange={this.beefChanges} key="beef" type="number" value={this.state.beefStock}/></td>
+						<td><input onChange={this.chickenChanges} key="chicken" type="number" value={this.state.chickenStock}/></td>
+						<td><input onChange={this.vegChanges} key="veg" type="number" value={this.state.vegStock}/></td>
+						<td><input onChange={this.alfaChanges} key="alfa" type="number" value={this.state.alfaStock}/></td>
+					</tr>);
+		}
+
+	}
+});
+
 
 
 

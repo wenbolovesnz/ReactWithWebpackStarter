@@ -35,7 +35,14 @@ const Actions = {
             actionType: Constants.ADD_ORDER_DATE,
             data: eventData
         });
-    }
+    },
+
+	saveStockUpdate: function(eventData){
+		AppDispatcher.dispatch({
+			actionType: Constants.UPDATE_STOCK,
+			data: eventData
+		});
+	}
 
 };
 
