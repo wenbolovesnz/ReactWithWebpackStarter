@@ -33,6 +33,11 @@ const SignUp = React.createClass({
 		this.setState(this.state);
 	},
 
+	_displayNameChanges(event){
+		this.state.displayName = event.target.value;
+		this.setState(this.state);
+	},
+
 	handleSubmit(event) {
 		event.preventDefault();
 
@@ -64,6 +69,7 @@ const SignUp = React.createClass({
 								this.error = "Login Failed!";
 							} else {
 								userData.provider = authData.provider;
+								userData.displayName= this.state.displayName;
 								userData.username = authData.password.email.replace(/@.*/, '');
 								FirebaseRef.child("users").child(userData.uid).set(userData);
 
@@ -103,6 +109,16 @@ const SignUp = React.createClass({
 								type="email"
 								hintStyle={{color: 'whitesmoke'}}
 								onChange={this._emailChanges} />
+
+							<TextField
+								fullWidth={true}
+								hintText="Please enter your prefered display name"
+								floatingLabelStyle={{color:'whitesmoke'}}
+								floatingLabelText="Display name"
+								value={this.state.displayName}
+								type="text"
+								hintStyle={{color: 'whitesmoke'}}
+								onChange={this._displayNameChanges} />
 
 							<TextField
 								type="password"

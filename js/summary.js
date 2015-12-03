@@ -14,6 +14,13 @@ const Summary = React.createClass({
 	_handleSubmit(){
 		Actions.submitOrder();
 	},
+
+	_getTotalCost(){
+		let cheapOnes = (this.props.beef + this.props.chicken + this.props.veg) * 2.5 + (this.props.alfa * 3);
+		let dearOnes = (this.props.aji + this.props.manJar) * 6;
+		return cheapOnes + dearOnes;
+	},
+
 	render(){
 		return(
 			<div id='summary' className="col-lg-4 col-md-4 col-sm-12">
@@ -25,7 +32,7 @@ const Summary = React.createClass({
 							Beef
 						</div>
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-							* {this.props.beef}
+							{this.props.beef} * $ 2.50
 						</div>
 					</div>
 					<div className="row">
@@ -33,7 +40,7 @@ const Summary = React.createClass({
 							Chicken
 						</div>
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-							* {this.props.chicken}
+							{this.props.chicken} * $ 2.50
 						</div>
 					</div>
 
@@ -42,7 +49,7 @@ const Summary = React.createClass({
 							Vegatable
 						</div>
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-							* {this.props.veg}
+							{this.props.veg} * $ 2.50
 						</div>
 					</div>
 
@@ -51,23 +58,41 @@ const Summary = React.createClass({
 							Alfajores
 						</div>
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-							* {this.props.alfa}
+							{this.props.alfa} * $ 3.00
 						</div>
 					</div>
 
 					<div className="row">
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-							<b>Total</b>
+							Aji
 						</div>
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-							* {this.props.beef + this.props.chicken + this.props.veg + this.props.alfa}
+							{this.props.aji} * $ 6.00
+						</div>
+					</div>
+
+					<div className="row">
+						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							Manjar
+						</div>
+						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							{this.props.manJar} * $ 6.00
+						</div>
+					</div>
+
+					<div className="row">
+						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							<b>Total cost:</b>
+						</div>
+						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							${this._getTotalCost()}
 						</div>
 					</div>
 
 					<div className="submitOder">
 						<RaisedButton  type="submit" label="Submit" primary={true} onClick={this._handleSubmit} disabled={this.props.isSubmitting}/>
 					</div>
-                    {this.props.alterBox ? (<AlterBox  message="Your order has been saved."/>) : ''}
+              {this.props.alterBox ? (<AlterBox  message="Your order has been saved."/>) : ''}
 				</div>
 			</div>
 		)

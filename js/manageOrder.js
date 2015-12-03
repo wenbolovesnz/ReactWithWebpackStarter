@@ -34,6 +34,8 @@ const ManageOrder = React.createClass({
 			sum += (user.currentOrderDetailsForUser.beef || 0) +
 							(user.currentOrderDetailsForUser.veg || 0) +
 							(user.currentOrderDetailsForUser.chicken || 0) +
+							(user.currentOrderDetailsForUser.aji || 0) +
+							(user.currentOrderDetailsForUser.manJar || 0) +
 							(user.currentOrderDetailsForUser.alfa || 0);
 			return sum;
 		}, 0);
@@ -61,10 +63,13 @@ const ManageOrder = React.createClass({
 									<thead>
 										<tr>
 											<th>Username</th>
+											<th>Display name</th>
 											<th>Beef</th>
 											<th>Chicken</th>
 											<th>Veg</th>
 											<th>Alfajores</th>
+											<th>Aji</th>
+											<th>Manjar</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -75,10 +80,13 @@ const ManageOrder = React.createClass({
 										})}
 										<tr>
 											<td>Total</td>
+											<td></td>
 											<td>{this._getTotalFor('beef')}</td>
 											<td>{this._getTotalFor('chicken')}</td>
 											<td>{this._getTotalFor('veg')}</td>
 											<td>{this._getTotalFor('alfa')}</td>
+											<td>{this._getTotalFor('aji')}</td>
+											<td>{this._getTotalFor('manJar')}</td>
 										</tr>
 										<TotalStocks orderKey={this.props.params.key}/>
 									</tbody>
@@ -101,10 +109,13 @@ const OrderRow = React.createClass({
 		return (
 		<tr>
 			<td>{this.props.value.username}</td>
+			<td>{this.props.value.displayName}</td>
 			<td>{this.props.value.currentOrderDetailsForUser.beef}</td>
 			<td>{this.props.value.currentOrderDetailsForUser.chicken}</td>
 			<td>{this.props.value.currentOrderDetailsForUser.veg}</td>
 			<td>{this.props.value.currentOrderDetailsForUser.alfa}</td>
+			<td>{this.props.value.currentOrderDetailsForUser.aji}</td>
+			<td>{this.props.value.currentOrderDetailsForUser.manJar}</td>
 		</tr>);
 	}
 });
@@ -154,6 +165,16 @@ const TotalStocks= React.createClass({
 		this.setState(this.state);
 	},
 
+	ajiChanges(event){
+		this.state.ajiStock = event.target.value;
+		this.setState(this.state);
+	},
+
+	manJarChanges(event){
+		this.state.manJarStock = event.target.value;
+		this.setState(this.state);
+	},
+
 	_handleSave(){
 		this.state.orderKey = this.props.orderKey;
 		Actions.saveStockUpdate(this.state);
@@ -166,20 +187,26 @@ const TotalStocks= React.createClass({
 						<td>Total stocks:
 							<RaisedButton label="Edit" primary={true} onClick={this._showEdit}/>
 						</td>
+						<td></td>
 						<td>{this.state.beefStock}</td>
 						<td>{this.state.chickenStock}</td>
 						<td>{this.state.vegStock}</td>
 						<td>{this.state.alfaStock}</td>
+						<td>{this.state.ajiStock}</td>
+						<td>{this.state.manJarStock}</td>
 					</tr>
 			);
 		}else{
 			return (
 					<tr>
 						<td><RaisedButton style={{marginLeft: 10}}label="Save" primary={true} onClick={this._handleSave} /></td>
+						<td></td>
 						<td><input onChange={this.beefChanges} key="beef" type="number" value={this.state.beefStock}/></td>
 						<td><input onChange={this.chickenChanges} key="chicken" type="number" value={this.state.chickenStock}/></td>
 						<td><input onChange={this.vegChanges} key="veg" type="number" value={this.state.vegStock}/></td>
 						<td><input onChange={this.alfaChanges} key="alfa" type="number" value={this.state.alfaStock}/></td>
+						<td><input onChange={this.ajiChanges} key="aji" type="number" value={this.state.ajiStock}/></td>
+						<td><input onChange={this.manJarChanges} key="manJar" type="number" value={this.state.manJarStock}/></td>
 					</tr>);
 		}
 

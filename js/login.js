@@ -43,9 +43,7 @@ const Login = React.createClass({
 				this.state.isSubmitting = false;
 				this.setState(this.state);
 			} else {
-				console.log("Authenticated successfully with payload:", authData);
 				const { location } = this.props;
-
 				if (location.state && location.state.nextPathname) {
 					this.history.replaceState(null, location.state.nextPathname)
 				} else {

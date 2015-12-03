@@ -12,7 +12,9 @@ var _orderData = {
     beefStock : 0,
     chickenStock : 0,
     vegStock : 0,
-    alfaStock : 0
+    alfaStock : 0,
+		manJarStock: 0,
+		ajiStock: 0
 };
 
 var Store;
@@ -42,6 +44,8 @@ Store = Object.assign({}, EventEmitter.prototype, {
             order.chickenStock = data.chickenStock;
             order.vegStock = data.vegStock;
             order.alfaStock = data.alfaStock;
+            order.manJarStock = data.manJarStock;
+            order.ajiStock = data.ajiStock;
 
             ref.set(order, ()=> {
                 _orderData = order;
@@ -73,6 +77,8 @@ Store = Object.assign({}, EventEmitter.prototype, {
                 chicken: data.chicken,
                 veg: data.veg,
                 alfa: data.alfa,
+                aji: data.aji,
+                manJar: data.manJar,
                 hasOrder: true
             }, ()=> {
                 data.isSubmitting = false;
@@ -130,11 +136,15 @@ Store = Object.assign({}, EventEmitter.prototype, {
                 veg: 0,
                 chicken: 0,
                 alfa: 0,
+	              manJar: 0,
+	              aji: 0,
                 isSubmitting: false,
                 date: snapShot.val().date,
                 currentOrderKey: keyFromOders,
                 image: require('../images/pic1.jpg'),
-                image2: require('../images/pic2.jpg')
+                image2: require('../images/pic2.jpg'),
+	              imageAji :require('../images/aji.png'),
+	              imageManJar :require('../images/manJar.png')
             };
 
             let userAuthData = FirebaseRef.getAuth();
@@ -152,11 +162,15 @@ Store = Object.assign({}, EventEmitter.prototype, {
                     initData.chicken = userCurrentOrder.chicken || 0;
                     initData.veg = userCurrentOrder.veg || 0;
                     initData.alfa = userCurrentOrder.alfa || 0;
+                    initData.aji = userCurrentOrder.aji || 0;
+                    initData.manJar = userCurrentOrder.manJar || 0;
                 } else {
                     initData.beef = 0;
                     initData.chicken = 0;
                     initData.veg = 0;
                     initData.alfa = 0;
+                    initData.aji = 0;
+                    initData.manJar = 0;
                 }
                 initData.username = userData.username;
 
@@ -212,7 +226,11 @@ AppDispatcher.register(function(action) {
 				_data.chicken--;
 			} else if(action.data.type === 'veg'){
 				_data.veg--;
-			} else {
+			} else if(action.data.type === 'aji'){
+				_data.aji--;
+			} else if(action.data.type === 'manJar'){
+				_data.manJar--;
+			}else {
 				_data.alfa--;
 			}
 			Store.emitChange();
@@ -234,7 +252,11 @@ AppDispatcher.register(function(action) {
 				_data.chicken++;
 			} else if(action.data.type === 'veg'){
 				_data.veg++;
-			} else {
+			} else if(action.data.type === 'aji'){
+				_data.aji++;
+			} else if(action.data.type === 'manJar'){
+				_data.manJar++;
+			}else {
 				_data.alfa++;
 			}
 			Store.emitChange();

@@ -3,6 +3,7 @@ const FirebaseRef = require('./firebaseRef');
 const Mui = require('material-ui');
 const RaisedButton = Mui.RaisedButton;
 const TextField = Mui.TextField;
+const AlterBox = require('./alertBox');
 
 
 const Account = React.createClass({
@@ -74,61 +75,132 @@ const Account = React.createClass({
 
     render(){
         return(
-            <div className="col-lg-12">
+	        <div>
+		        <DisplayName/>
+		        <div className="col-lg-12">
+			        <div id="notification">
+				        <h3>Change password</h3>
+			        </div>
+			        <div className="row">
+				        <div className="loginForm col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
 
-                <div id="notification">
-                    <h3>Change password</h3>
-                </div>
-                <div className="row">
-                    <div className="loginForm col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
+					        <form onSubmit={this._handleSavePassword} >
+						        <TextField
+							        fullWidth={true}
+							        hintText="Please enter your current password"
+							        floatingLabelStyle={{color:'whitesmoke'}}
+							        floatingLabelText="Current password"
+							        value={this.state.currentPassword}
+							        type="password"
+							        hintStyle={{color: 'whitesmoke'}}
+							        onChange={this._currentPasswordChanges} />
 
-                        <form onSubmit={this._handleSavePassword} >
-                            <TextField
-                                fullWidth={true}
-                                hintText="Please enter your current password"
-                                floatingLabelStyle={{color:'whitesmoke'}}
-                                floatingLabelText="Current password"
-                                value={this.state.currentPassword}
-                                type="password"
-                                hintStyle={{color: 'whitesmoke'}}
-                                onChange={this._currentPasswordChanges} />
+						        <TextField
+							        type="password"
+							        fullWidth={true}
+							        floatingLabelStyle={{color:'whitesmoke'}}
+							        hintText="Please enter your new password"
+							        floatingLabelText="New password"
+							        value={this.state.newPassword}
+							        hintStyle={{color: 'whitesmoke'}}
+							        onChange={this._handleNewPasswordChanges} />
 
-                            <TextField
-                                type="password"
-                                fullWidth={true}
-                                floatingLabelStyle={{color:'whitesmoke'}}
-                                hintText="Please enter your new password"
-                                floatingLabelText="New password"
-                                value={this.state.newPassword}
-                                hintStyle={{color: 'whitesmoke'}}
-                                onChange={this._handleNewPasswordChanges} />
+						        <TextField
+							        type="password"
+							        fullWidth={true}
+							        floatingLabelStyle={{color:'whitesmoke'}}
+							        hintText="Please confirm your new password"
+							        floatingLabelText="Confirm new password"
+							        value={this.state.confirmNewPassword}
+							        hintStyle={{color: 'whitesmoke'}}
+							        onChange={this._handleConfirmNewPasswordChanges} />
 
-                            <TextField
-                                type="password"
-                                fullWidth={true}
-                                floatingLabelStyle={{color:'whitesmoke'}}
-                                hintText="Please confirm your new password"
-                                floatingLabelText="Confirm new password"
-                                value={this.state.confirmNewPassword}
-                                hintStyle={{color: 'whitesmoke'}}
-                                onChange={this._handleConfirmNewPasswordChanges} />
-
-                            <div>
-                                <RaisedButton type="submit" label="Save" primary={true}/>
-                            </div>
-                            <div className="error">
+						        <div>
+							        <RaisedButton type="submit" label="Save" primary={true}/>
+						        </div>
+						        <div className="error">
                                 {this.state.error}
-                            </div>
+						        </div>
+					        </form>
+				        </div>
+			        </div>
+		        </div>
+	        </div>
 
-
-                        </form>
-
-                    </div>
-
-                </div>
-            </div>
         );
     }
+});
+
+
+const DisplayName = React.createClass({
+
+	getInitialState(){
+		return {
+			displayName: '',
+			alterBox: false
+		};
+	},
+
+	componentDidMount(){
+		var uid = FirebaseRef.getAuth().uid;
+		FirebaseRef.child('users').child(uid).child('displayName').once('value', (snapShot) => {
+			this.state.displayName = snapShot.val();
+			this.setState(this.state);
+		});
+	},
+
+	_handleSaveDisplayName(event){
+		event.preventDefault();
+		if(this.state.displayName !== ''){
+			var uid = FirebaseRef.getAuth().uid;
+			FirebaseRef.child('users').child(uid).child('displayName').set(this.state.displayName, (error) => {
+				if(error){
+				}else{
+					this.state.alterBox = true;
+					this.setState(this.state);
+					setTimeout(() =>{
+						this.state.alterBox = false;
+						this.setState(this.state);
+					}, 2000);
+				}
+			});
+		}
+	},
+
+	_handleDisplayName(event){
+		this.state.displayName = event.target.value;
+		this.setState(this.state);
+	},
+
+	render(){
+		return(
+			<div className="col-lg-12">
+				<div id="notification">
+					<h3>Display name</h3>
+				</div>
+				<div className="row">
+					<div className="loginForm col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
+
+						<form onSubmit={this._handleSaveDisplayName} >
+							<TextField
+								type="text"
+								fullWidth={true}
+								floatingLabelStyle={{color:'whitesmoke'}}
+								hintText="Please enter your preferred display name"
+								floatingLabelText="Display name"
+								value={this.state.displayName}
+								hintStyle={{color: 'whitesmoke'}}
+								onChange={this._handleDisplayName} />
+							<div>
+								<RaisedButton type="submit" label="Save" primary={true}/>
+							</div>
+							{this.state.alterBox ? (<AlterBox  message="Change saved."/>) : ''}
+						</form>
+					</div>
+				</div>
+			</div>
+		);
+	}
 });
 
 module.exports = Account;
