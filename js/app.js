@@ -88,14 +88,14 @@ const App = React.createClass({
 		return <div>
 			<AppHeader />
 			{ this.state.loggedIn ? (<div className="row ">
-				<IconButton iconStyle={{color:"whitesmoke" }}
+				<IconButton iconStyle={{color:"#B09F47" }}
 					className="pull-right logout-btn"
 					iconClassName="material-icons"
 					tooltipPosition="bottom-center"
 					onClick={this._logout}
 					tooltip="Log out">exit_to_app</IconButton>
 
-				<IconButton iconStyle={{color:"whitesmoke" }}
+				<IconButton iconStyle={{color:"#B09F47" }}
 							className="pull-left account-btn"
 							iconClassName="material-icons"
 							tooltipPosition="bottom-center"

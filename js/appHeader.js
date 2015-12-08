@@ -1,12 +1,13 @@
 const React = require('react');
-const Paper = require('material-ui').Paper;
+const Logo = require('../images/logo.png');
+
 const AppHeader = React.createClass({
 	render(){
 		return (
 			<div id='appHeader'>
-				<Paper zDepth={1}>
-					<h2>Maria Mulata</h2>
-				</Paper>
+					<div className="logo-holder">
+						<image src={Logo} className="img-responsive center-block logo" alt="logo"></image>
+					</div>
 			</div>
 		);
 	}

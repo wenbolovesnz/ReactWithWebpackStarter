@@ -69,21 +69,21 @@ const Login = React.createClass({
 								<TextField
 									fullWidth={true}
 									hintText="Please enter your email address"
-									floatingLabelStyle={{color:'whitesmoke'}}
+									floatingLabelStyle={{color:'#B09F47'}}
 									floatingLabelText="Email"
 									value={this.state.email}
 									type="email"
-									hintStyle={{color: 'whitesmoke'}}
+									hintStyle={{color: '#B09F47'}}
 									onChange={this._emailChanges} />
 
 								<TextField
 									type="password"
 									fullWidth={true}
-									floatingLabelStyle={{color:'whitesmoke'}}
+									floatingLabelStyle={{color:'#B09F47'}}
 									hintText="Please enter your password"
 									floatingLabelText="Password"
 									value={this.state.password}
-									hintStyle={{color: 'whitesmoke'}}
+									hintStyle={{color: '#B09F47'}}
 									onChange={this._handlePasswordChanges} />
 								<div>
 									<RaisedButton type="submit" label="Login" primary={true} disabled = {this.state.isSubmitting}/>
@@ -99,7 +99,7 @@ const Login = React.createClass({
 											fill: '#b71c1c'
 										}}
 										labelStyle={{
-											color:'#f8f8ff'
+											color:'#B09F47'
 										}}
 										name="rememberMe"
 										value={this.state.rememberMe}
