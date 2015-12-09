@@ -3,7 +3,11 @@ var AppDispatcher = require('./appDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var Constants = require('./constants');
 const FirebaseRef = require('./firebaseRef');
+const R = require('ramda');
 var CHANGE_EVENT = 'change';
+
+var findByKey = (key) => { return R.find(R.propEq('key', key))};
+var sortByOrder = R.sortBy(R.prop('order'));
 
 var _data = {};
 var _ordersData = [];
@@ -55,12 +59,21 @@ Store = Object.assign({}, EventEmitter.prototype, {
     },
 
     createAnewOderDate: function (dateString) {
-        var newOrderKeyRef = FirebaseRef.child('orders').push();
-        newOrderKeyRef.set({
-            date: dateString
-        }, ()=> {
-            this.emitChange();
-        });
+
+	    FirebaseRef.child('products').once('value', (snapShot) =>{
+		    var value = snapShot.val();
+
+		    var newOrderKeyRef = FirebaseRef.child('orders').push();
+		    newOrderKeyRef.set({
+			    date: dateString,
+			    products: value
+		    }, ()=> {
+			    this.emitChange();
+		    });
+
+	    });
+
+
     },
 
     submitOrder: function () {
@@ -70,24 +83,22 @@ Store = Object.assign({}, EventEmitter.prototype, {
         this.setInitData(data);
         this.emitChange;
 
+	      var order = {
+		      date: data.date,
+		      hasOrder: true
+	      };
+
+				data.products.forEach((product) => {
+					order[product.key] = product.quantity;
+				});
+
         FirebaseRef.child('users').child(FirebaseRef.getAuth().uid).child('orders').child(data.currentOrderKey)
-            .set({
-                date: data.date,
-                beef: data.beef,
-                chicken: data.chicken,
-                veg: data.veg,
-                alfa: data.alfa,
-                aji: data.aji,
-                manJar: data.manJar,
-                hasOrder: true
-            }, ()=> {
+            .set(order, ()=> {
                 data.isSubmitting = false;
                 data.alterBox = true;
                 this.setInitData(data);
                 this.emitChange();
             });
-
-
     },
 
     getOrderDetailsByKeyFromLocal: function () {
@@ -131,20 +142,13 @@ Store = Object.assign({}, EventEmitter.prototype, {
     getInitData: function () {
         FirebaseRef.child('orders').limitToLast(1).on('child_added', (snapShot) => {
             let keyFromOders = snapShot.key();
+	          let orderData = snapShot.val();
+
             let initData = {
-                beef: 0,
-                veg: 0,
-                chicken: 0,
-                alfa: 0,
-	              manJar: 0,
-	              aji: 0,
+	              products: sortByOrder(R.values(orderData.products)),
                 isSubmitting: false,
                 date: snapShot.val().date,
-                currentOrderKey: keyFromOders,
-                image: require('../images/pic1.jpg'),
-                image2: require('../images/pic2.jpg'),
-	              imageAji :require('../images/aji.png'),
-	              imageManJar :require('../images/manJar.png')
+                currentOrderKey: keyFromOders
             };
 
             let userAuthData = FirebaseRef.getAuth();
@@ -158,19 +162,13 @@ Store = Object.assign({}, EventEmitter.prototype, {
                 }
 
                 if (userCurrentOrder) {
-                    initData.beef = userCurrentOrder.beef || 0;
-                    initData.chicken = userCurrentOrder.chicken || 0;
-                    initData.veg = userCurrentOrder.veg || 0;
-                    initData.alfa = userCurrentOrder.alfa || 0;
-                    initData.aji = userCurrentOrder.aji || 0;
-                    initData.manJar = userCurrentOrder.manJar || 0;
+	                  initData.products.forEach((product) => {
+		                  product.quantity = userCurrentOrder[product.key] || 0;
+	                  });
                 } else {
-                    initData.beef = 0;
-                    initData.chicken = 0;
-                    initData.veg = 0;
-                    initData.alfa = 0;
-                    initData.aji = 0;
-                    initData.manJar = 0;
+		                initData.products.forEach((product) => {
+			                product.quantity = 0;
+		                });
                 }
                 initData.username = userData.username;
 
@@ -220,19 +218,8 @@ AppDispatcher.register(function(action) {
 				Store.emitChange();
 			break;
 		case Constants.MINUS:
-			if(action.data.type === 'beef'){
-				_data.beef--;
-			}else if(action.data.type === 'chicken'){
-				_data.chicken--;
-			} else if(action.data.type === 'veg'){
-				_data.veg--;
-			} else if(action.data.type === 'aji'){
-				_data.aji--;
-			} else if(action.data.type === 'manJar'){
-				_data.manJar--;
-			}else {
-				_data.alfa--;
-			}
+			let product = findByKey(action.data.type)(_data.products);
+			product.quantity--;
 			Store.emitChange();
 			break;
 		case Constants.SUBMIT_ORDER:
@@ -246,19 +233,8 @@ AppDispatcher.register(function(action) {
 			Store.updateStock.call(Store, action.data);
 			break;
 		case Constants.ADD:
-			if(action.data.type === 'beef'){
-				_data.beef++;
-			}else if(action.data.type === 'chicken'){
-				_data.chicken++;
-			} else if(action.data.type === 'veg'){
-				_data.veg++;
-			} else if(action.data.type === 'aji'){
-				_data.aji++;
-			} else if(action.data.type === 'manJar'){
-				_data.manJar++;
-			}else {
-				_data.alfa++;
-			}
+			let product = findByKey(action.data.type)(_data.products);
+			product.quantity++;
 			Store.emitChange();
 			break;
 		default:
