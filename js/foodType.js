@@ -2,7 +2,6 @@ const React = require('react');
 const Mui = require('material-ui');
 const RaisedButton = Mui.RaisedButton;
 const Actions = require('./actions');
-const TweenMax = require('gsap');
 
 const FoodType = React.createClass({
 

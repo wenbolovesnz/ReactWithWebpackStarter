@@ -2,7 +2,7 @@ var path = require('path');
 
 module.exports = {    
     context: path.resolve('js'),
-    entry: ["./utils", "./app"],
+    entry: ["./configDev", "./app"],
     output: {        
         path: path.resolve('build/'),
         filename: "bundle.js",

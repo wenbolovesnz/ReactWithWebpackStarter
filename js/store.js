@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var Constants = require('./constants');
 const FirebaseRef = require('./firebaseRef');
 const R = require('ramda');
+const $ = require('jquery');
 var CHANGE_EVENT = 'change';
 
 var findByKey = (key) => { return R.find(R.propEq('key', key))};
@@ -83,14 +84,14 @@ Store = Object.assign({}, EventEmitter.prototype, {
         this.setInitData(data);
         this.emitChange;
 
-	      var order = {
-		      date: data.date,
-		      hasOrder: true
-	      };
+        var order = {
+            date: data.date,
+            hasOrder: true
+        };
 
-				data.products.forEach((product) => {
-					order[product.key] = product.quantity;
-				});
+        data.products.forEach((product) => {
+            order[product.key] = product.quantity;
+        });
 
         FirebaseRef.child('users').child(FirebaseRef.getAuth().uid).child('orders').child(data.currentOrderKey)
             .set(order, ()=> {
@@ -98,6 +99,17 @@ Store = Object.assign({}, EventEmitter.prototype, {
                 data.alterBox = true;
                 this.setInitData(data);
                 this.emitChange();
+
+                $.ajax({
+                    url: window.config.confirmOrderEmail,
+                    contentType: 'application/json',
+                    type:'POST',
+                    data:JSON.stringify({
+                        token: FirebaseRef.getAuth().token,
+                        userOrder: order
+                    })
+                })
+
             });
     },
 
