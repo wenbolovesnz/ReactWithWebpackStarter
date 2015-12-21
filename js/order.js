@@ -11,7 +11,7 @@ const Order = React.createClass({
 	getInitialState(){
 		return {
 			loading: true
-		}
+		};
 	},
 
 	componentDidMount() {

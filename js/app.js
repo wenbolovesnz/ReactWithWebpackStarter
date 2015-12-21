@@ -27,15 +27,11 @@ const ManageOrder = require('./manageOrder');
 const Account = require('./Account');
 const ResetPassword = require('./resetPassword');
 
-import { Router, Route, Link, IndexRoute, History } from 'react-router'
+import { Router, Route, Link, IndexRoute, History } from 'react-router';
 
 const NoMatch = React.createClass({
 	render() {
-		return (
-			<div>
-				<h1>No Match</h1>
-			</div>
-		)
+		return (<div><h1>No Match</h1></div>)
 	}
 });
 

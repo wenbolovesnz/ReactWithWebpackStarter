@@ -50,8 +50,8 @@ const Summary = React.createClass({
 
 					<div className="submitOder">
 						<RaisedButton  type="submit" label="Submit" primary={true} onClick={this._handleSubmit} disabled={this.props.isSubmitting}/>
+						{this.props.alterBox ? (<AlterBox  message="Your order has been saved."/>) : ''}
 					</div>
-              {this.props.alterBox ? (<AlterBox  message="Your order has been saved."/>) : ''}
 				</div>
 			</div>
 		)

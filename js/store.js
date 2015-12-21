@@ -92,21 +92,21 @@ Store = Object.assign({}, EventEmitter.prototype, {
         data.products.forEach((product) => {
             order[product.key] = product.quantity;
         });
-
         FirebaseRef.child('users').child(FirebaseRef.getAuth().uid).child('orders').child(data.currentOrderKey)
             .set(order, ()=> {
                 data.isSubmitting = false;
                 data.alterBox = true;
                 this.setInitData(data);
                 this.emitChange();
-
                 $.ajax({
                     url: window.config.confirmOrderEmail,
                     contentType: 'application/json',
                     type:'POST',
                     data:JSON.stringify({
-                        token: FirebaseRef.getAuth().token,
-                        userOrder: order
+											token: FirebaseRef.getAuth().token,
+											userOrder: data.products,
+											orderDate: order.date,
+											username: data.username
                     })
                 })
 

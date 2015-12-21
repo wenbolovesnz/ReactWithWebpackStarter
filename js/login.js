@@ -1,5 +1,5 @@
 const React = require('react');
-import { Link, History } from 'react-router'
+import { Link, History } from 'react-router';
 const FirebaseRef = require('./firebaseRef');
 const Mui = require('material-ui');
 const TextField = Mui.TextField;

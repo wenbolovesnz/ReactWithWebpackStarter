@@ -6,8 +6,9 @@ const AlterBox = React.createClass({
         return (
 	        <div>
 		        <Snackbar
+			        style={{'position': 'relative'}}
 			        message={this.props.message}
-			        autoHideDuration={2500}
+			        autoHideDuration={3000}
 			        openOnMount={true} />
 	        </div>);
     }
