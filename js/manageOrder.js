@@ -62,8 +62,8 @@ const ManageOrder = React.createClass({
 								<table className="table">
 									<thead>
 										<tr>
-											<th>Username</th>
-											<th>Display name</th>
+											<th>Customer</th>
+											<th>Message</th>
 											<th>Beef</th>
 											<th>Chicken</th>
 											<th>Veg</th>
@@ -108,8 +108,8 @@ const OrderRow = React.createClass({
 	render(){
 		return (
 		<tr>
-			<td>{this.props.value.username}</td>
-			<td>{this.props.value.displayName}</td>
+			<td>{this.props.value.displayName ? this.props.value.displayName : this.props.value.username}</td>
+			<td>{this.props.value.currentOrderDetailsForUser.specialInstruction}</td>
 			<td>{this.props.value.currentOrderDetailsForUser.beef}</td>
 			<td>{this.props.value.currentOrderDetailsForUser.chicken}</td>
 			<td>{this.props.value.currentOrderDetailsForUser.veg}</td>
@@ -119,7 +119,6 @@ const OrderRow = React.createClass({
 		</tr>);
 	}
 });
-
 
 const TotalStocks= React.createClass({
 	getInitialState(){
