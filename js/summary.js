@@ -1,9 +1,12 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const RaisedButton = require('material-ui').RaisedButton;
+const Checkbox = require('material-ui').Checkbox;
 const CircularProgress = require('material-ui').CircularProgress;
 const AlterBox = require('./alertBox');
 const Actions = require('./actions');
+const Store = require('./store');
+
 const Summary = React.createClass({
 
 	_handleSubmit(){
@@ -23,7 +26,6 @@ const Summary = React.createClass({
 				<div>
 					<h4>Good day, {this.props.username}</h4>
 					<h4>Order Summary</h4>
-
 					{
 						this.props.products.map((product)=>{
 							return (
@@ -38,7 +40,6 @@ const Summary = React.createClass({
 							)
 						})
 					}
-
 					<div className="row">
 						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 							<b>Total cost:</b>
@@ -48,12 +49,60 @@ const Summary = React.createClass({
 						</div>
 					</div>
 
-					<div className="submitOder">
-						<RaisedButton  type="submit" label="Submit" primary={true} onClick={this._handleSubmit} disabled={this.props.isSubmitting}/>
-						{this.props.alterBox ? (<AlterBox  message="Your order has been saved."/>) : ''}
+					{this.props.customOrder ? (<Instruction specialInstruction={this.specialInstruction}/>): ''}
+
+					<div className="row submitOder">
+						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+								<RaisedButton  type="submit" label="Submit" primary={true} onClick={this._handleSubmit} disabled={this.props.isSubmitting}/>
+						</div>
+						<div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							<CheckBoxComponent customOrder={this.props.customOrder}/>
+						</div>
 					</div>
+					{this.props.alterBox ? (<AlterBox  message="Your order has been saved."/>) : ''}
 				</div>
 			</div>
+		)
+	}
+});
+
+
+const Instruction = React.createClass({
+	handleChange(event){
+		Actions.setSpecialInstruction(event.target.value);
+	},
+	render(){
+		return(
+			<div>
+				<h4>Spcial instruction</h4>
+				<textarea className="textArea" rows="4" cols="30"
+					value={this.props.specialInstruction}
+					onChange={this.handleChange}>
+				</textarea>
+			</div>
+		)
+	}
+});
+
+const CheckBoxComponent = React.createClass({
+	_handleCheck(){
+		var toggleValue = !this.props.customOrder;
+		Actions.handleToggleCustomOrder(toggleValue);
+	},
+
+	render(){
+		return(
+			<Checkbox
+				iconStyle={{
+					fill: '#b71c1c'
+				}}
+				labelStyle={{
+					color:'#B09F47'
+				}}
+				onCheck={this._handleCheck}
+				name="customizeIt"
+				value={this.props.customOrder}
+				label="Message?"/>
 		)
 	}
 });

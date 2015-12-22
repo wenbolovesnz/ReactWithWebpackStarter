@@ -45,6 +45,8 @@ const OrderSection = React.createClass({
 				<Notification  date={this.props.value.date}/>
 				<div className="row">
 					<Summary products= {this.props.value.products}
+						customOrder = {this.props.value.customOrder}
+						specialInstruction = {this.props.value.specialInstruction}
 						isSubmitting= {this.props.value.isSubmitting}
 						alterBox= {this.props.value.alterBox } username={this.props.value.username}/>
 					<div id='products' className="col-lg-8 col-md-8 col-sm-12">

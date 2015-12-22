@@ -25,6 +25,11 @@ var _orderData = {
 var Store;
 Store = Object.assign({}, EventEmitter.prototype, {
 
+		toggleIsCustomOrder: function(isCustomOrder){
+			_data.customOrder = isCustomOrder;
+			this.emitChange();
+		},
+
     getOrderData: function () {
         return _orderData;
     },
@@ -88,6 +93,10 @@ Store = Object.assign({}, EventEmitter.prototype, {
             date: data.date,
             hasOrder: true
         };
+
+	      if(data.customOrder){
+		      order.specialInstruction = data.specialInstruction;
+	      }
 
         data.products.forEach((product) => {
             order[product.key] = product.quantity;
@@ -159,6 +168,7 @@ Store = Object.assign({}, EventEmitter.prototype, {
             let initData = {
 	              products: sortByOrder(R.values(orderData.products)),
                 isSubmitting: false,
+	              specialInstruction: '',
                 date: snapShot.val().date,
                 currentOrderKey: keyFromOders
             };
@@ -194,6 +204,11 @@ Store = Object.assign({}, EventEmitter.prototype, {
     getData: function () {
         return _data;
     },
+
+		setSpecialInstruction: function(newSpecialInstruction){
+			_data.specialInstruction = newSpecialInstruction;
+			this.emitChange();
+		},
 
     setInitData: function (data) {
         _data = data;
@@ -243,6 +258,12 @@ AppDispatcher.register(function(action) {
 			break;
 		case Constants.UPDATE_STOCK:
 			Store.updateStock.call(Store, action.data);
+			break;
+		case Constants.TOGGLE_CUSTOM_ORDER:
+			Store.toggleIsCustomOrder.call(Store, action.data);
+			break;
+		case Constants.SPECIAL_INSTRUCTION:
+			Store.setSpecialInstruction.call(Store, action.data);
 			break;
 		case Constants.ADD:
 			let product = findByKey(action.data.type)(_data.products);

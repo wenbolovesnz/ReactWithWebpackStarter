@@ -42,6 +42,19 @@ const Actions = {
 			actionType: Constants.UPDATE_STOCK,
 			data: eventData
 		});
+	},
+
+	handleToggleCustomOrder: function(eventData){
+		AppDispatcher.dispatch({
+			actionType: Constants.TOGGLE_CUSTOM_ORDER,
+			data: eventData
+		});
+	},
+	setSpecialInstruction: function(eventData){
+		AppDispatcher.dispatch({
+			actionType: Constants.SPECIAL_INSTRUCTION,
+			data: eventData
+		});
 	}
 
 };
